@@ -61,7 +61,7 @@ export default function ElectionRoom() {
       // 2. Cek apakah ini ID fallback demo (0, 1, 2)
       if (
         (electionId === 0 || electionId === 1 || electionId === 2) &&
-        (CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000" || CONTRACT_ADDRESS === "0x892BD181283F8C5818fa8D86D12D932dD74D9c53")
+        (CONTRACT_ADDRESS === "0x67270580252C4913f9DE092638D6F6D863060310" || CONTRACT_ADDRESS === "0x67270580252C4913f9DE092638D6F6D863060310")
       ) {
         const mockElectionsList = [
           {
@@ -114,7 +114,7 @@ export default function ElectionRoom() {
       // 3. Ambil data asli dari Blockchain Sepolia
       const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL);
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-      
+
       const rawElection = await contract.getElection(electionId);
       const rawCandidates = await contract.getCandidates(electionId);
 
@@ -209,15 +209,15 @@ export default function ElectionRoom() {
     try {
       setVoteLoading(true);
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-      
+
       const tx = await contract.giveVote(electionId, candidateId);
-      
+
       // Menunggu transaksi masuk blok
       await tx.wait();
 
       setSuccessMsg('Vote berhasil diverifikasi dan direkam ke blockchain!');
       setUserHasVoted(true);
-      
+
       // Refresh data pemilu terbaru
       await fetchElectionDetails();
     } catch (err: any) {
@@ -245,8 +245,8 @@ export default function ElectionRoom() {
         <p className="text-gray-400 max-w-md mx-auto">
           ID Pemilu yang Anda cari tidak tersedia di blockchain maupun simulasi lokal.
         </p>
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -264,8 +264,8 @@ export default function ElectionRoom() {
       {/* Detail Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div className="flex items-center gap-4">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-300 transition-all"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -300,7 +300,7 @@ export default function ElectionRoom() {
 
       {/* Main Grid: Left side candidates voting room, Right side real-time results chart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* Candidates Selection (8 columns) */}
         <section className="lg:col-span-7 space-y-6">
           <div className="flex items-center justify-between">
@@ -339,13 +339,12 @@ export default function ElectionRoom() {
 
           <div className="grid grid-cols-1 gap-6">
             {election.candidates.map((cand) => (
-              <div 
-                key={cand.id} 
-                className={`glass rounded-2xl p-6 border relative overflow-hidden flex flex-col justify-between md:flex-row md:items-center gap-4 transition-all duration-300 ${
-                  userHasVoted 
-                    ? 'border-white/5 opacity-80' 
+              <div
+                key={cand.id}
+                className={`glass rounded-2xl p-6 border relative overflow-hidden flex flex-col justify-between md:flex-row md:items-center gap-4 transition-all duration-300 ${userHasVoted
+                    ? 'border-white/5 opacity-80'
                     : 'border-white/10 hover:border-violet-500/30 shadow-lg hover:shadow-violet-600/5 hover:-translate-y-0.5'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-lg font-bold text-white shadow-md">
@@ -362,7 +361,7 @@ export default function ElectionRoom() {
 
                 <div>
                   {userHasVoted ? (
-                    <button 
+                    <button
                       disabled
                       className="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold bg-white/5 border border-white/5 text-gray-500 text-sm cursor-not-allowed"
                     >
@@ -418,8 +417,8 @@ export default function ElectionRoom() {
                     </div>
                     {/* Visual Progress Bar */}
                     <div className="w-full h-3 rounded-full bg-white/5 overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-full transition-all duration-1000 ease-out" 
+                      <div
+                        className="h-full bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
