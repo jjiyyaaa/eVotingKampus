@@ -67,7 +67,8 @@ export default function Dashboard() {
         // Validasi format address sebelum inisialisasi RPC
         if (
           !CONTRACT_ADDRESS ||
-          CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000" ||
+          // Ubah baris 70 jadi gini:
+          (CONTRACT_ADDRESS as string) === "0x0000000000000000000000000000000000000000" ||
           !CONTRACT_ADDRESS.startsWith("0x") ||
           CONTRACT_ADDRESS.length !== 42
         ) {
@@ -76,15 +77,15 @@ export default function Dashboard() {
 
         const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL);
         const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-        
+
         const count = await contract.electionCount();
         const electionCount = Number(count);
-        
+
         const fetchedElections: Election[] = [];
         for (let i = 0; i < electionCount; i++) {
           const rawElection = await contract.getElection(i);
           const rawCandidates = await contract.getCandidates(i);
-          
+
           const candidates: Candidate[] = rawCandidates.map((c: any) => ({
             id: Number(c.id),
             name: c.name,
@@ -99,7 +100,7 @@ export default function Dashboard() {
             candidates: candidates
           });
         }
-        
+
         setElections(fetchedElections);
         setIsUsingMock(false);
       } catch (err) {
@@ -118,7 +119,7 @@ export default function Dashboard() {
   const totalElections = elections.length;
   const uniqueCampuses = new Set(elections.map(e => e.campusName)).size;
   const totalVotes = elections.reduce(
-    (sum, e) => sum + e.candidates.reduce((cSum, c) => cSum + c.voteCount, 0), 
+    (sum, e) => sum + e.candidates.reduce((cSum, c) => cSum + c.voteCount, 0),
     0
   );
 
@@ -128,7 +129,7 @@ export default function Dashboard() {
       <section className="relative glass rounded-3xl p-8 md:p-12 overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(124,58,237,0.1)]">
         <div className="absolute top-0 right-0 -mt-16 -mr-16 w-96 h-96 rounded-full bg-violet-600/10 blur-3xl" />
         <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-96 h-96 rounded-full bg-fuchsia-600/10 blur-3xl" />
-        
+
         <div className="relative z-10 max-w-3xl space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-violet-500/10 text-violet-300 border border-violet-500/20">
             <Award className="w-4 h-4" />
@@ -140,18 +141,18 @@ export default function Dashboard() {
           <p className="text-base md:text-lg text-gray-300 max-w-2xl leading-relaxed">
             eVoting Kampus menggunakan blockchain Ethereum Sepolia untuk memastikan hak pilih Anda terlindungi dari manipulasi suara secara permanen, aman, transparan, dan anti-cetak ulang kertas suara.
           </p>
-          
+
           <div className="flex flex-wrap items-center gap-4 pt-4">
-            <Link 
+            <Link
               href="/create"
               className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
             >
               <PlusCircle className="w-5 h-5" />
               Buat Pemilu Baru
             </Link>
-            
+
             {!isConnected && (
-              <button 
+              <button
                 onClick={connectWallet}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
               >
@@ -238,7 +239,7 @@ export default function Dashboard() {
             <p className="text-gray-400 max-w-md mx-auto text-sm">
               Jadilah pionir kampus Anda dengan membuat pemilu mahasiswa pertama yang terdesentralisasi.
             </p>
-            <Link 
+            <Link
               href="/create"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10 text-white transition-all"
             >
@@ -248,8 +249,8 @@ export default function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {elections.map((election) => (
-              <div 
-                key={election.id} 
+              <div
+                key={election.id}
                 className="glass rounded-2xl p-6 flex flex-col justify-between group glass-hover border border-white/5 shadow-lg"
               >
                 <div className="space-y-4">
@@ -292,7 +293,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="pt-6">
-                  <Link 
+                  <Link
                     href={`/election/${election.id}`}
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold bg-white/5 border border-white/10 hover:bg-violet-600 hover:border-violet-600 hover:text-white transition-all duration-300 text-sm text-gray-300"
                   >
