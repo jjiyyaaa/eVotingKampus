@@ -1,18 +1,18 @@
 # Decentralized Campus Voting System (Multi-Campus)
 
-eVotingKampus adalah platform SaaS (Software as a Service) berbasis Web3 yang memungkinkan Badan Eksekutif Mahasiswa (BEM) dari universitas mana pun untuk membuat, mengelola, dan melaksanakan pemungutan suara mahasiswa secara transparan, jujur, dan anti-manipulasi menggunakan teknologi blockchain.
+eVotingKampus is a Web3-based SaaS (Software as a Service) platform that enables any university's Student Executive Board (BEM) to create, manage, and execute student ballots in a transparent, fair, and anti-manipulation manner using blockchain technology.
 
-Platform ini di-deploy di jaringan **Ethereum Sepolia Testnet** dan menggunakan smart contract Solidity untuk mengunci kandidat serta mengamankan hak pilih mahasiswa secara terdesentralisasi.
+The platform is deployed on the Ethereum Sepolia Testnet and uses Solidity smart contracts to lock in candidates and secure student voting rights in a decentralized manner.
 
 ---
 
-## 🚀 Fitur Utama
+## 🚀 Key Features
 
-- **Multi-Campus SaaS Platform**: Universitas mana pun dapat mendaftarkan pemilu mereka sendiri secara mandiri tanpa perlu men-deploy infrastruktur blockchain sendiri.
-- **Blockchain-Backed Security**: Pilihan suara disimpan secara permanen di blockchain, mencegah manipulasi, perusakan kotak suara, atau double-voting (1 alamat wallet = 1 suara per ID Pemilu).
-- **MetaMask Integration (Ethers.js v6)**: Integrasi dompet kripto MetaMask secara manual tanpa pustaka tambahan pihak ketiga. Fitur deteksi otomatis, auto-switch, dan penambahan jaringan Sepolia Testnet secara instan.
-- **Real-Time Visual Charts**: Tampilan hasil perolehan suara secara dinamis menggunakan chart persentase interaktif yang langsung di-fetch dari smart contract.
-- **Fallback Simulation Mode**: Memungkinkan pengguna melakukan uji coba fungsionalitas (buat pemilu, voting, hasil) di browser menggunakan mock data ketika dompet MetaMask tidak terhubung.
+- **Multi-Campus SaaS Platform**: Any university can register their own elections independently without needing to deploy its own blockchain infrastructure.
+- **Blockchain-Backed Security**: Vote selections are permanently stored on the blockchain, preventing manipulation, ballot tampering, or double-voting (1 wallet address = 1 vote per Election ID).
+- **MetaMask Integration (Ethers.js v6)**: Manually integrate the MetaMask crypto wallet without additional third-party libraries. Features auto-detection, auto-switching, and instant Sepolia Testnet network addition.
+- **Real-Time Visual Charts**: Dynamically display vote results using interactive percentage charts fetched directly from smart contracts.
+- **Fallback Simulation Mode**: Allows users to test functionality (election creation, voting, results) in a browser using mock data when a MetaMask wallet is not connected.
 
 ---
 
@@ -25,59 +25,59 @@ Platform ini di-deploy di jaringan **Ethereum Sepolia Testnet** dan menggunakan 
 
 ---
 
-## 📦 Struktur Folder Proyek
+## 📦 Project Folder Structure
 
 ```text
 decentralized-campus-voting/
 ├── contracts/
-│   └── VotingKampus.sol       # Smart contract Solidity
+│   └── VotingKampus.sol       # Solidity smart contract
 ├── src/
 │   ├── app/
 │   │   ├── create/
-│   │   │   └── page.tsx       # Halaman Pembuatan Pemilu baru
+│   │   │   └── page.tsx       # New Election Creation Page
 │   │   ├── election/
 │   │   │   └── [id]/
-│   │   │       └── page.tsx   # Halaman Ruang Pemilu & Hasil Chart
-│   │   ├── globals.css        # Desain visual global & glassmorphism
-│   │   ├── layout.tsx         # Struktur layout global & provider wrapper
-│   │   └── page.tsx           # Dashboard utama & statistik pemilu
+│   │   │       └── page.tsx   # Election Space & Results Chart Page
+│   │   ├── globals.css        # Global visual design & glassmorphism
+│   │   ├── layout.tsx         # Global layout structure & provider wrapper
+│   │   └── page.tsx           # Main dashboard & election statistics
 │   ├── components/
-│   │   └── Navbar.tsx         # Bar navigasi atas & tombol koneksi MetaMask
+│   │   └── Navbar.tsx         # Top navigation bar & MetaMask connection button
 │   ├── context/
-│   │   └── Web3Context.tsx    # Context provider untuk state Web3 global
+│   │   └── Web3Context.tsx    # Context provider for global Web3 state
 │   ├── hooks/
-│   │   └── useWeb3.ts         # Custom React Hook untuk handle wallet & jaringan
+│   │   └── useWeb3.ts         # Custom React Hook for handling wallets & networks
 │   └── lib/
-│       └── contract.ts        # Tempat ABI & konfigurasi alamat contract
+│       └── contract.ts        # ABI location & contract address configuration
 └── package.json
 ```
 
 ---
 
-## 💻 Cara Menjalankan Proyek secara Lokal
+## 💻 How to Run the Project Locally
 
-### 1. Prasyarat
-Pastikan Anda sudah menginstal:
-- [Node.js](https://nodejs.org/) (versi 18.x atau yang lebih baru)
-- Ekstensi browser [MetaMask](https://metamask.io/)
+### 1. Prerequisites
+Make sure you have installed:
+- [Node.js](https://nodejs.org/) (version 18.x or later)
+- [MetaMask](https://metamask.io/) browser extension
 
-### 2. Instalasi Dependensi
-Buka terminal Anda di folder root proyek, lalu jalankan perintah:
+### 2. Installing Dependencies
+Open your terminal in the project root folder, then run the command:
 ```bash
 npm install
 ```
 
-### 3. Konfigurasi Kontrak Pintar (Smart Contract)
-1. Deploy file smart contract `contracts/VotingKampus.sol` menggunakan Remix IDE, Hardhat, atau Foundry ke Sepolia Testnet.
-2. Setelah berhasil dideploy, ambil **Contract Address** yang dihasilkan.
-3. Buka file `src/lib/contract.ts` dan ganti alamat contract pada baris pertama:
-   ```typescript
-   export const CONTRACT_ADDRESS: string = "ALAMAT_KONTRAK_SEPOLIA_ANDA_DI_SINI";
-   ```
+### 3. Configuring the Smart Contract
+1. Deploy the smart contract file `contracts/VotingKampus.sol` using Remix IDE, Hardhat, or Foundry to the Sepolia Testnet.
+2. After successful deployment, retrieve the generated **Contract Address**.
+3. Open the `src/lib/contract.ts` file and replace the contract address in the first line:
+```typescript
+export const CONTRACT_ADDRESS: string = "YOUR_SEPOLIA_CONTRACT_ADDRESS_IS_HERE";
+```
 
-### 4. Menjalankan Server Development
-Jalankan perintah berikut untuk menjalankan server Next.js lokal:
+### 4. Running the Development Server
+Run the following command to start the local Next.js server:
 ```bash
 npm run dev
 ```
-Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat aplikasi berjalan.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application running.
