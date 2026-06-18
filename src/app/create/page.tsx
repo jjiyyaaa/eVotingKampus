@@ -15,7 +15,7 @@ export default function CreateElection() {
   const [campusName, setCampusName] = useState('');
   const [electionName, setElectionName] = useState('');
   const [candidates, setCandidates] = useState<string[]>(['', '']); // min 2 candidates
-  
+
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -50,7 +50,7 @@ export default function CreateElection() {
       setErrorMsg('Nama Pemilu tidak boleh kosong.');
       return;
     }
-    
+
     const validCandidates = candidates.filter(c => c.trim() !== '');
     if (validCandidates.length < 2) {
       setErrorMsg('Daftar kandidat minimal harus berjumlah 2 orang.');
@@ -71,16 +71,16 @@ export default function CreateElection() {
 
     try {
       setTxLoading(true);
-      
+
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-      
+
       // Mengirimkan data pemilu baru ke smart contract
       const tx = await contract.createElection(campusName, electionName, validCandidates);
       setTxHash(tx.hash);
-      
+
       // Menunggu transaksi masuk block (mining)
       await tx.wait();
-      
+
       setSuccessMsg('Transaksi berhasil! Pemilu terdaftar secara permanen di blockchain.');
       setTimeout(() => {
         router.push('/');
@@ -88,7 +88,7 @@ export default function CreateElection() {
     } catch (err: any) {
       console.error('Error saat pendaftaran pemilu:', err);
       // Fallback jika contract address adalah dummy placeholder
-      if (CONTRACT_ADDRESS === "0x892BD181283F8C5818fa8D86D12D932dD74D9c53" || err.message?.includes('call revert exception')) {
+      if (CONTRACT_ADDRESS === "0x67270580252C4913f9DE092638D6F6D863060310" || err.message?.includes('call revert exception')) {
         triggerSimulation(validCandidates);
       } else {
         setErrorMsg(err.reason || err.message || 'Transaksi dibatalkan atau terjadi kesalahan jaringan.');
@@ -104,7 +104,7 @@ export default function CreateElection() {
     setTimeout(() => {
       setTxLoading(false);
       setSuccessMsg(`[Simulasi Sukses] Pemilu "${electionName}" berhasil didaftarkan ke database lokal!`);
-      
+
       // Simpan data di sessionStorage sementara agar muncul di detail room untuk uji coba langsung
       const customId = Date.now();
       const newElectionData = {
@@ -118,7 +118,7 @@ export default function CreateElection() {
           voteCount: 0
         }))
       };
-      
+
       const stored = sessionStorage.getItem('custom_elections');
       const customElections = stored ? JSON.parse(stored) : [];
       customElections.push(newElectionData);
@@ -134,8 +134,8 @@ export default function CreateElection() {
     <div className="max-w-3xl mx-auto space-y-8">
       {/* Header Back Button */}
       <div className="flex items-center gap-4">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-300 transition-all"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -147,7 +147,7 @@ export default function CreateElection() {
       </div>
 
       <div className="glass rounded-2xl p-6 md:p-8 border border-white/10 shadow-2xl relative">
-        
+
         {/* State Banner */}
         {txLoading && (
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-30 flex flex-col items-center justify-center rounded-2xl space-y-4">
@@ -169,8 +169,8 @@ export default function CreateElection() {
               <Landmark className="w-4 h-4 text-violet-400" />
               Nama Kampus / Universitas
             </label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Contoh: Universitas Indonesia"
               value={campusName}
               onChange={(e) => setCampusName(e.target.value)}
@@ -184,8 +184,8 @@ export default function CreateElection() {
               <CheckSquare className="w-4 h-4 text-violet-400" />
               Nama / Judul Pemilu
             </label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Contoh: Pemilihan Raya Ketua BEM UI 2026"
               value={electionName}
               onChange={(e) => setElectionName(e.target.value)}
@@ -200,7 +200,7 @@ export default function CreateElection() {
                 <PlusCircle className="w-4 h-4 text-violet-400" />
                 Daftar Kandidat (Pasangan Calon)
               </label>
-              <button 
+              <button
                 type="button"
                 onClick={addCandidateField}
                 className="flex items-center gap-1 text-xs font-bold text-violet-400 hover:text-violet-300 bg-violet-500/10 px-3 py-1.5 rounded-lg border border-violet-500/10 hover:border-violet-500/30 transition-all"
@@ -209,7 +209,7 @@ export default function CreateElection() {
                 Tambah Paslon
               </button>
             </div>
-            
+
             <p className="text-xs text-gray-500">
               * Kandidat terkunci permanen setelah pemilu didaftarkan ke blockchain (tidak dapat diedit/ditambah).
             </p>
@@ -220,15 +220,15 @@ export default function CreateElection() {
                   <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-xs font-bold font-mono text-gray-400">
                     {String(index + 1).padStart(2, '0')}
                   </div>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder={`Nama Kandidat Pasangan Calon ${index + 1}`}
                     value={candidate}
                     onChange={(e) => handleCandidateChange(index, e.target.value)}
                     className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 placeholder-gray-500 transition-all"
                   />
                   {candidates.length > 2 && (
-                    <button 
+                    <button
                       type="button"
                       onClick={() => removeCandidateField(index)}
                       className="p-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-all"
@@ -258,13 +258,13 @@ export default function CreateElection() {
 
           {/* Form Action Buttons */}
           <div className="flex items-center gap-4 border-t border-white/5 pt-6">
-            <button 
+            <button
               type="submit"
               className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300"
             >
               Mulai Pendaftaran Pemilu
             </button>
-            <Link 
+            <Link
               href="/"
               className="px-6 py-3.5 rounded-xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-center transition-all text-sm"
             >
